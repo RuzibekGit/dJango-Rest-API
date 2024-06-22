@@ -23,6 +23,8 @@ urlpatterns = [
     path('<int:pk>/', BookDetailView.as_view()),
     path('<int:pk>/update/', UpdateBookView.as_view()),
     path('create/', CreateBookView.as_view()),
-    path('<int:pk>/delete/', DeleteBookView.as_view())
+    path('<int:pk>/delete/', DeleteBookView.as_view()),
 
 ]
+
+urlpatterns += [path('filter/', filter_by_books)]

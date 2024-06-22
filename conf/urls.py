@@ -28,7 +28,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Learn API",
         default_version='v1',
-        description="This is test for lerning django rest api!",
+        description="This is test for leaning django rest api!",
         terms_of_service="https://www.coming_soon.com/",
         contact=openapi.Contact(email="ruzibek.work@gmail.com"),
         license=openapi.License(name="BSD License"),
@@ -44,4 +44,6 @@ urlpatterns = [
     
     path('admin/', admin.site.urls),
     path('books/', include('books.urls', namespace='books')),
+    path('user/', include('author.urls', namespace='author')),
+
 ]

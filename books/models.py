@@ -8,7 +8,7 @@ class BooksModel(models.Model):
     pages = models.IntegerField()
     in_stock = models.BooleanField(default=False)
     content = models.TextField()
-    isbn = models.CharField(max_length=25)
+    isbn = models.CharField(max_length=25, unique=True)
 
 
     def __str__(self) -> str:
