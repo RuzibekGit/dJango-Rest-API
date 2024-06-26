@@ -17,6 +17,7 @@ class TagsModel(models.Model):
         verbose_name_plural = "tags"
 
 
+
 class PostsModel(models.Model):
 
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='posts')

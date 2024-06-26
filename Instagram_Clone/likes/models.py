@@ -19,5 +19,5 @@ class LikesModel(models.Model):
         return self.comment  
 
     class Meta:
-        verbose_name = 'Comment'
-        verbose_name_plural = 'Comments'
+        verbose_name = 'Like'
+        verbose_name_plural = 'Likes'

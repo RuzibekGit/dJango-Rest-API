@@ -24,6 +24,7 @@ class SignUpSerializer(serializers.Serializer):
         
         user.save()
         return user
+    
 
 
     def validate(self, attrs):
