@@ -1,13 +1,16 @@
-from django.shortcuts import render
-from rest_framework import generics, status
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from users.models import UserModel, ConfirmationModel, CODE_VERIFIED, DONE
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FileUploadParser
 
+from shared.utils import send_code_to_email, send_code_to_phone
+from users.models import UserModel, ConfirmationModel, CODE_VERIFIED, DONE, VIA_EMAIL
 from users.serializers import SignUpSerializer, UpdateUserSerializer
+
 
 
 class SignUpCreateAPIView(generics.CreateAPIView):
@@ -44,6 +47,9 @@ class VerifyCodeAPIView(APIView):
                 'message': "Your code is invalid or already expired"
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        
 
 
 class UpdateUserAPIView(APIView):
@@ -73,3 +79,62 @@ class UpdateUserAPIView(APIView):
                 "message": "Invalid request body",
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResendVerifyCodeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+
+        if user.auth_status == CODE_VERIFIED:
+            response = {
+                'success': False,
+                'message': "Your account is already verified."
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        code = user.create_verify_code(user.auth_type)
+
+        if user.auth_type == VIA_EMAIL:
+            send_code_to_email(user.email, code)
+        else:
+            send_code_to_phone(phone_number=user.phone_number, code=code)
+
+        user.confirmation_model.code = code
+        user.confirmation_model.save()
+
+        response = {
+            'success': True,
+            'message': "Verification code has been resent to your " + user.auth_type
+        }
+        return Response(response, status=status.HTTP_200_OK)
+
+
+
+class UpdateAvatarAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FileUploadParser]
+
+    def put(self, request, *args, **kwargs):
+        user = self.request.user
+
+        if 'avatar' not in request.data:
+            return Response({'message': 'No avatar provided.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        avatar_file = request.data['avatar']
+
+        try:
+            avatar_file.validate(limit_value=1024 * 1024)
+        except ValidationError as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Update user avatar
+        user.avatar = avatar_file
+        user.save()
+
+        response = {
+            'success': True,
+            'message': 'Avatar updated successfully.'
+        }
+        return Response(response, status=status.HTTP_200_OK)

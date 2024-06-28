@@ -19,15 +19,8 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'auth_type', 'auth_status']
 
     def validate(self, data):
-        data = self.auth_validate(data=data)
-        # auth_type = data['auth_type']
-        # if auth_type == VIA_EMAIL:
-        #     if UserModel.objects.filter(email=data['email']).exists():
-        #         raise serializers.ValidationError("This email is already registered, use resend code api")
-        # else:
-        #     if UserModel.objects.filter(phone_number=data['phone_number']).exists():
-        #         raise serializers.ValidationError("This phone number is already registered, use resend code api")
-        return data
+        return self.auth_validate(data=data)
+    
 
     def create(self, validated_data):
         user = super(SignUpSerializer, self).create(validated_data)
@@ -39,16 +32,22 @@ class SignUpSerializer(serializers.ModelSerializer):
             send_code_to_phone(phone_number=user.phone_number, code=code)
         user.save()
         return user
+    
 
     @staticmethod
     def auth_validate(data):
         user_input = str(data['email_phone_number']).lower()
         if user_input.endswith('@gmail.com'):
+            if UserModel.objects.filter(email=user_input).exists():
+                raise serializers.ValidationError("This email is already registered, use resend code api")
             data = {
                 'email': user_input,
                 'auth_type': VIA_EMAIL
             }
+        
         elif user_input.startswith("+"):
+            if UserModel.objects.filter(phone_number=user_input).exists():
+                raise serializers.ValidationError("This phone number is already registered, use resend code api")
             data = {
                 'phone_number': user_input,
                 'auth_type': VIA_PHONE
