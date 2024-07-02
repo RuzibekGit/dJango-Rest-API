@@ -9,7 +9,7 @@ class CommentsModel(models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='comments')
     
     post = models.ForeignKey(PostsModel, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
-    # comment_to_comment = models.ForeignKey(CommentsModel, on_delete=models.CASCADE, null=True, blank=True)
+    comment_to_comment = models.ForeignKey(self, on_delete=models.CASCADE, null=True, blank=True)
     
     comment = models.TextField()
     

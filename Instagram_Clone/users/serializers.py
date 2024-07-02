@@ -3,7 +3,7 @@ from rest_framework import serializers
 from users.models import UserModel, VIA_EMAIL, VIA_PHONE
 from shared.utils import send_code_to_email, send_code_to_phone
 
-
+# region signup
 class SignUpSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(SignUpSerializer, self).__init__(*args, **kwargs)
@@ -64,7 +64,9 @@ class SignUpSerializer(serializers.ModelSerializer):
         data = super(SignUpSerializer, self).to_representation(instance)
         data['access_token'] = instance.token()['access_token']
         return data
+# endregion    
 
+# region update
 class UpdateUserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=255)
     last_name = serializers.CharField(max_length=255)
@@ -111,3 +113,4 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             instance.set_password(validated_data.get('password'))
             instance.save()
         return instance
+# endregion
