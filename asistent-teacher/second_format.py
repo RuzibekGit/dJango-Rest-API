@@ -25,12 +25,13 @@ def time_format(seconds):
         [24, 'kun'],
         [30.428, 'oy'],
         [12, 'yil'],
-        [100, 'asr'],
-        [100, 'end']
+        [100, 'asr']
+        # [1, 'end']
     ]
     i = 0
     for ind in range((l := len(memo)) - 1):
         if (time := seconds // memo[ind][0]):
+            print(time)
             next_char = time % memo[ind + 1][0]
 
             memo[ind] = f"{int(next_char)} {memo[ind][1]}"
@@ -39,7 +40,7 @@ def time_format(seconds):
             
     memo = memo[0:i+1]
 
-    return ", ".join(memo[::-1])
+    return f"{time} asr" + ", ".join(memo[::-1])
 
 
 
