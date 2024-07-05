@@ -1,25 +1,37 @@
 from django.db import models
 
-from users.models import UserModel
-from posts.models import PostsModel
+from users.models import UserModel, BaseModel
+from posts.models import PostModel
 
 
-
-class CommentsModel(models.Model):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='comments')
-    
-    post = models.ForeignKey(PostsModel, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
-    comment_to_comment = models.ForeignKey(self, on_delete=models.CASCADE, null=True, blank=True)
-    
+# -------------------------- Comment -------------------------------
+# region comment
+class CommentsModel(BaseModel):
+    post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='post_comments')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child', null=True, blank=True)
     comment = models.TextField()
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  
 
-    
-    def __str__(self) -> str:
-        return self.comment  
+    def __str__(self):
+        return self.comment
 
     class Meta:
-        verbose_name = 'Comment'
-        verbose_name_plural = 'Comments'
+        db_table = 'post_comments'
+        verbose_name = 'post comment'
+        verbose_name_plural = 'post comments'
+# endregion
+
+# -------------------------- Comment Like -------------------------------
+# region comment like
+class CommentLikeModel(BaseModel):
+    comment = models.ForeignKey(CommentsModel, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='comment_likes')
+
+    def __str__(self):
+        return self.comment.comment
+
+    class Meta:
+        db_table = 'comment_likes'
+        verbose_name = 'comment like'
+        verbose_name_plural = 'comment likes'
+# endregion

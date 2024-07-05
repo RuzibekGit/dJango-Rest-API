@@ -1,41 +1,47 @@
+from shared.models import BaseModel
 from django.db import models
 
 from users.models import UserModel
 
 
 
-class TagsModel(models.Model):
-    name = models.CharField(max_length=122)
+# class TagsModel(models.Model):  # TODO: 
+#     name = models.CharField(max_length=122)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
-        return self.name
+#     def __str__(self) -> str:
+#         return self.name
     
-    class Meta:
-        verbose_name = "Tag"
-        verbose_name_plural = "tags"
+#     class Meta:
+#         verbose_name = "Tag"
+#         verbose_name_plural = "tags"
 
 
 
-class PostsModel(models.Model):
-
+# ------------------ Post Model -----------------------
+# region post
+class PostModel(BaseModel):
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='posts')
 
-    name  = models.CharField(max_length=256)
     image = models.ImageField(upload_to='posts')
+    caption = models.TextField(null=True, blank=True)
 
-    location = models.CharField(max_length=122)
-    tags     = models.ManyToManyField(TagsModel, related_name='tags')
-    tag_user = models.ManyToManyField(UserModel, related_name='tags')  # tag yor friend
+#     TODO: adding functionality
+#     location = models.CharField(max_length=122)
+#     tags     = models.ManyToManyField(TagsModel, related_name='tags')
+#     tag_user = models.ManyToManyField(UserModel, related_name='tags')  # tag yor friend
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
+    def __str__(self):
+        return self.caption
 
-
-    def __str__(self) -> str:
-        return self.name
-    
     class Meta:
-        verbose_name ='Post'
-        verbose_name_plural ='Posts'
+        db_table = 'posts'
+        verbose_name = 'post'
+        verbose_name_plural = 'posts'
+# endregion
+
+
+
+
+

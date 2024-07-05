@@ -119,7 +119,7 @@ PHONE_EXPIRATION_TIME = 2
 
 # -------------------------- Confirmation -------------------------------
 # region confirmation
-class ConfirmationModel(models.Model):
+class ConfirmationModel(BaseModel):
 
     VERIFY_TYPE = (
         (VIA_EMAIL, VIA_EMAIL),
@@ -140,3 +140,4 @@ class ConfirmationModel(models.Model):
 
 
 # endregion
+

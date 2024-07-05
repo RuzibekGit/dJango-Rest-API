@@ -1,13 +1,13 @@
-from users.models import UserModel, ConfirmationModel
 from django.contrib import admin
 
+
+from users.models import UserModel, ConfirmationModel
 
 
 @admin.register(UserModel)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'user_role', 'phone_number']
+    list_display = ['username']
 
-# hi their
 
 @admin.register(ConfirmationModel)
 class ConfirmationModelAdmin(admin.ModelAdmin):
