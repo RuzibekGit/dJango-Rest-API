@@ -139,10 +139,8 @@ class UpdateAvatarSerializer(serializers.Serializer):
 class LoginSerializer(TokenObtainPairSerializer):
     def __init__(self, *args, **kwargs):
         super(LoginSerializer, self).__init__(*args, **kwargs)
-        self.fields['userinput'] = serializers.CharField(
-            max_length=128, required=False)
-        self.fields['username'] = serializers.CharField(
-            max_length=128, required=False)
+        self.fields['userinput'] = serializers.CharField(max_length=128, required=False)
+        self.fields['username'] = serializers.CharField(max_length=128, required=False)
 
     def validate(self, attrs):
         userinput = attrs.get('userinput')

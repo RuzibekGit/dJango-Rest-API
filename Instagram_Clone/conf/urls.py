@@ -25,7 +25,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Learn API",
+        title="Instagram Clone",
         default_version='v1',
         description="This is test for leaning django rest api!",
         terms_of_service="https://www.coming_soon.com/",
@@ -42,7 +42,10 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
     path('admin/', admin.site.urls),
-    path('api/v1/users/', include('users.urls', namespace='users'))
+    path('api/v1/users/', include('users.urls', namespace='users')),
+    path('api/v1/posts/', include('posts.urls', namespace='posts')),
+    path('api/v1/posts/comment', include('comments.urls', namespace='comment')),
+
 
 ]
 

@@ -36,6 +36,7 @@ class PostModel(BaseModel):
         return self.caption
 
     class Meta:
+        ordering = ['created_at']
         db_table = 'posts'
         verbose_name = 'post'
         verbose_name_plural = 'posts'

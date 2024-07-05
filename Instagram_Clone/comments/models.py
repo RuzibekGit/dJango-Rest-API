@@ -16,6 +16,7 @@ class CommentsModel(BaseModel):
         return self.comment
 
     class Meta:
+        ordering = ['-created_at']
         db_table = 'post_comments'
         verbose_name = 'post comment'
         verbose_name_plural = 'post comments'
@@ -25,7 +26,7 @@ class CommentsModel(BaseModel):
 # region comment like
 class CommentLikeModel(BaseModel):
     comment = models.ForeignKey(CommentsModel, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='comment_likes')
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='likes')
 
     def __str__(self):
         return self.comment.comment

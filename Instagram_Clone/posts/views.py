@@ -2,23 +2,24 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
-from comments.models import CommentsModel
 from posts.models import PostModel
-from posts.serializers import PostSerializer, CommentSerializer
+from posts.serializers import PostSerializer
+from shared.pagination import CustomPagination
 
 
 class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         return PostModel.objects.all()
+    
 
-
-class PostCommentListView(generics.ListAPIView):
-    serializer_class = CommentSerializer
+class PostCreateView(generics.CreateAPIView):
+    serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        post_id = self.kwargs.get('pk')
-        return CommentsModel.objects.filter(post_id=post_id)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
