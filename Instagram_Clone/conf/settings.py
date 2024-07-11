@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # installed
-    # 'drf_yasg',
+    'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
 
@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'users',
     'posts',
     'comments',
-    'likes'
+    'likes',
+    'story'
 ]
 
 MIDDLEWARE = [
