@@ -5,42 +5,61 @@ from users.models import UserModel
 
 # --------------------------------------------------------------------------------
 class StoryModel(BaseModel):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='stories')
-
-    media = models.FieldFile(upload_to='stories')
-    caption = models.CharField(max_length=255)
-    expiry_date = models.DateTimeField()
-    is_active = models.BooleanField(default=True)
-    
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    media = models.FileField(upload_to='stories')
+    caption = models.TextField(null=True, blank=True)
+    expire_time = models.DateTimeField()
+    is_active = models.BooleanField()
 
     def __str__(self):
         return self.caption
-    
+
     class Meta:
-        verbose_name = 'story'
-        verbose_name_plural = 'stories'
+        ordering = ('-expire_time',)
+        verbose_name = 'Story'
+        verbose_name_plural = 'Stories'
 
 # --------------------------------------------------------------------------------
 class StoryViewModel(BaseModel):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='story-views')
-    story = models.ForeignKey(StoryModel, on_delete=models.CASCADE, related_name='story-views')
+    story = models.ForeignKey(StoryModel, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user
+        return self.story.caption
 
     class Meta:
-        verbose_name = 'StoryView'
-        verbose_name_plural = 'StoryViews'
-
+        # ordering = ('-expiry_time',)
+        verbose_name = 'Story view'
+        verbose_name_plural = 'Story views'
 
 # --------------------------------------------------------------------------------
-class StoryInteractionModel(BaseModel):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='story-views')
-    story = models.ForeignKey(StoryModel, on_delete=models.CASCADE, related_name='story-views')
+class StoryReactionModel(BaseModel):
+    REACTION_CHOICES = [
+        ('like', 'Like'),
+        ('heart', 'Heart'),
+    ]
+    story = models.ForeignKey(StoryModel, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    reaction = models.CharField(max_length=50, choices=REACTION_CHOICES)
 
     def __str__(self):
-        return self.user
+        return self.story.caption
 
     class Meta:
-        verbose_name = 'StoryView'
-        verbose_name_plural = 'StoryViews'
+        ordering = ('-id',)
+        verbose_name = 'Story reaction'
+        verbose_name_plural = 'Story reactions'
+
+# --------------------------------------------------------------------------------
+class StoryReportModel(BaseModel):
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    story = models.ForeignKey(StoryModel, on_delete=models.CASCADE)
+    reason = models.TextField()
+
+    def __str__(self):
+        return self.reason
+
+    class Meta:
+        ordering = ('-id',)
+        verbose_name = 'Story report'
+        verbose_name_plural = 'Story reports'

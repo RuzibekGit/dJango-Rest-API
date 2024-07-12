@@ -34,7 +34,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[permissions.AllowAny,],
-# )
+)
 
 
 urlpatterns = [
@@ -45,6 +45,7 @@ urlpatterns = [
     path('api/v1/users/', include('users.urls', namespace='users')),
     path('api/v1/posts/', include('posts.urls', namespace='posts')),
     path('api/v1/posts/comment', include('comments.urls', namespace='comment')),
+    path('api/v1/stories/', include('story.urls', namespace='stories')),
 
 
 ]

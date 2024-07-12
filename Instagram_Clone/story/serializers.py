@@ -1,20 +1,37 @@
 from rest_framework import serializers
-from posts.models import PostModel
-from likes.models import LikesModel
-from users.models import UserModel
-from users.serializers import SignUpSerializer
-from story.models import StoryModel
+
+from posts.serializers import UserSerializer
+from story.models import StoryModel, StoryViewModel, StoryReactionModel, StoryReportModel
 
 
 class StorySerializer(serializers.ModelSerializer):
-    user = SignUpSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    expire_time = serializers.DateTimeField(read_only=True)
 
     class Meta:
-        fields = ['__all__']
         model = StoryModel
+        fields = '__all__'
 
-    # def create(self, validated_data):
-    #     user = super(SignUpSerializer, self).create(validated_data)
 
-        
-    #     return user
+class StoryViewSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = StoryViewModel
+        fields = '__all__'
+
+
+class StoryReactionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = StoryReactionModel
+        fields = '__all__'
+
+
+class StoryReportSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = StoryReportModel
+        fields = '__all__'
